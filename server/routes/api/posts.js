@@ -6,16 +6,12 @@ const uri = process.env.DB_CONNECT;
 
 const router = express.Router();
 
-let counter = 0;
-
 async function loadPostsCollection() {
   const client = await mongodb.MongoClient.connect(uri,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
-  
-  console.log(`connect to DB ${++counter} times`);
   
   return client.db('mevn').collection('posts');
 }
