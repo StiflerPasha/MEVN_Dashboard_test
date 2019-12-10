@@ -1,47 +1,100 @@
 <template>
 
-  <div class="d-flex">
-    <div>
+  <div class="d-flex flex-wrap justify-space-around">
+    <div class="col-12">
       <h1 class="text-center">This is an about page</h1>
-      <v-btn class="error" @click="getPosts">click</v-btn>
+      <div class="d-flex justify-space-around flex-wrap">
+        <v-btn class="error ma-1"
+               :disabled="loadingPosts"
+               :loading="loadingPosts"
+               @click="getPosts"
+        >
+          Get posts
+          <template v-slot:loader>
+            <span class="custom-loader">
+              <v-icon light>cached</v-icon>
+            </span>
+          </template>
+        </v-btn>
+
+        <v-btn class="info ma-1"
+               :disabled="loadingKeys"
+               :loading="loadingKeys"
+               @click="getKeys"
+        >
+          Get keys
+          <template v-slot:loader>
+            <span class="custom-loader">
+              <v-icon light>cached</v-icon>
+            </span>
+          </template>
+        </v-btn>
+      </div>
     </div>
 
-    <v-card v-if="posts.length" raised class="flex-grow-1 ma-3">
-      <v-list shaped>
-        <v-subheader>POSTS:</v-subheader>
-        <v-list-item-group color="primary">
-          <v-list-item v-for="post in posts"
-                       :key="post._id"
-          >
-            <v-list-item-content>
-              <v-list-item-title v-text="post.text"/>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-card>
+
+    <v-list v-if="posts.length"
+            class="col-xs-12 col-sm-4 ma-3 overflow-auto scroll"
+            flat
+            max-height="250px">
+      <v-subheader>POSTS:</v-subheader>
+      <v-list-item-group color="primary">
+        <v-list-item v-for="post in posts" :key="post._id">
+          <v-list-item-content>
+            <v-list-item-title v-text="post.text"/>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
 
 
+    <v-list v-if="vpnKeys.date"
+            class="col-xs-12 col-sm-4 ma-3 overflow-auto scroll"
+            flat
+            max-height="250px"
+            max-width="360px">
+      <v-subheader>Были добавлены {{vpnKeys.date}}</v-subheader>
+      <v-list-item-group color="primary">
+        <v-list-item v-for="(key, idx) in vpnKeys.keys" :key="idx">
+          <v-list-item-content>
+            <v-list-item-title v-text="key" class="text-center"/>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
   </div>
 </template>
 
 <script>
-  import PostService from '../../PostService';
+  import PostService from '../../services/PostService';
+  import KeyService  from '../../services/KeyService';
 
   export default {
     name: 'about',
     data() {
       return {
-        site: `https://vk.com/hidemy_name_keys`,
-        html: null,
-        posts: []
+        loadingPosts: null,
+        loadingKeys: null,
+        posts: [],
+        vpnKeys: {}
       };
     },
     methods: {
       async getPosts() {
+        this.loadingPosts = true;
         try {
           this.posts = await PostService.getPosts();
+          this.loadingPosts = false;
+        } catch (err) {
+          console.log(err);
+        }
+      },
 
+      async getKeys() {
+        this.loadingKeys = true;
+        try {
+          this.vpnKeys = await KeyService.getKeys();
+          this.loadingKeys = false;
         } catch (err) {
           console.log(err);
         }
@@ -50,11 +103,69 @@
   };
 </script>
 
-<!--
-const getPage = async () => {
-const response = await fetch(SITE);
-console.log(response);
-};
+<style lang='scss' scoped>
+  /*SCROLL*/
+  .scroll {
+    &::-webkit-scrollbar {
+      background-color: transparent;
+      width: 4px;
+    }
 
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background-color: orangered;
+    }
 
-const SITE = `https://vk.com/hidemy_name_keys`;-->
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+      margin: 55px 0 10px 0;
+    }
+  }
+
+  /*ACTIVE LIST*/
+  .v-list-item--active {
+    background-color: transparent;
+  }
+
+  /*BUTTON LOADER*/
+  .custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
