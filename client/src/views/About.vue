@@ -4,48 +4,58 @@
     <div class="col-12">
       <h1 class="text-center">This is an about page</h1>
       <div class="d-flex justify-space-around flex-wrap">
-        <v-btn class="error ma-1"
-               :disabled="loadingPosts"
-               :loading="loadingPosts"
-               @click="getPosts"
-        >
-          Get posts
-          <template v-slot:loader>
-            <span class="custom-loader">
-              <v-icon light>cached</v-icon>
-            </span>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn class="error ma-1"
+                   :disabled="loadingPosts"
+                   :loading="loadingPosts"
+                   v-on="on"
+                   @click="getPosts"
+            >
+              Get posts
+              <template v-slot:loader>
+                <span class="custom-loader">
+                  <v-icon light>cached</v-icon>
+                </span>
+              </template>
+            </v-btn>
           </template>
-        </v-btn>
+          <span>Get posts from MongoDB</span>
+        </v-tooltip>
 
-        <v-btn class="info ma-1"
-               :disabled="loadingKeys"
-               :loading="loadingKeys"
-               @click="getKeys"
-        >
-          Get keys
-          <template v-slot:loader>
-            <span class="custom-loader">
-              <v-icon light>cached</v-icon>
-            </span>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn class="info ma-1"
+                   :disabled="loadingKeys"
+                   :loading="loadingKeys"
+                   v-on="on"
+                   @click="getKeys"
+            >
+              Get keys
+              <template v-slot:loader>
+                <span class="custom-loader">
+                  <v-icon light>cached</v-icon>
+                </span>
+              </template>
+            </v-btn>
           </template>
-        </v-btn>
+          <span>Get keys from Puppeteer(VK.com)</span>
+        </v-tooltip>
       </div>
     </div>
 
 
-    <v-list v-if="posts.length"
+    <v-card v-if="posts.length"
             class="col-xs-12 col-sm-4 ma-3 overflow-auto scroll"
             flat
             max-height="250px">
       <v-subheader>POSTS:</v-subheader>
-      <v-list-item-group color="primary">
-        <v-list-item v-for="post in posts" :key="post._id">
-          <v-list-item-content>
-            <v-list-item-title v-text="post.text"/>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-item-group>
-    </v-list>
+      <v-list-item v-for="post in posts" :key="post._id">
+        <v-list-item-content>
+          <v-list-item-title v-text="post.text"/>
+        </v-list-item-content>
+      </v-list-item>
+    </v-card>
 
 
     <v-list v-if="vpnKeys.date"
@@ -53,14 +63,12 @@
             flat
             max-height="250px"
             max-width="360px">
-      <v-subheader>Были добавлены {{vpnKeys.date}}</v-subheader>
-      <v-list-item-group color="primary">
-        <v-list-item v-for="(key, idx) in vpnKeys.keys" :key="idx">
-          <v-list-item-content>
-            <v-list-item-title v-text="key" class="text-center"/>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-item-group>
+      <v-subheader>Keys was added {{vpnKeys.date}}</v-subheader>
+      <v-list-item v-for="(key, idx) in vpnKeys.keys" :key="idx">
+        <v-list-item-content>
+          <v-list-item-title v-text="key" class="text-center"/>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </div>
 </template>
