@@ -48,7 +48,6 @@
 </template>
 
 <script>
-
   export default {
     name: 'App',
     data: () => ({
@@ -61,8 +60,11 @@
 </script>
 
 <style lang="scss">
+  html {
+    overflow: auto;
+  }
+
   .v-list-item--active {
     background: #370000f7;
-
   }
 </style>
