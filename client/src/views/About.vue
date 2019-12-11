@@ -74,8 +74,8 @@
 </template>
 
 <script>
-  import PostService from '../../services/PostService';
-  import KeyService  from '../../services/KeyService';
+  import PostService from '../services/PostService';
+  import KeyService  from '../services/KeyService';
 
   export default {
     name: 'about',
