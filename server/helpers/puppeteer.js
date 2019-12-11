@@ -25,6 +25,7 @@ exports.getPageContent = async function (url) {
     const content = await page.content();
     browser.close();
     
+    console.log('get page content');
     return content;
     
   } catch (err) {

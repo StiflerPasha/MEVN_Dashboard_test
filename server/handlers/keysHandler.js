@@ -20,10 +20,6 @@ exports.getVPNKeys = async () => {
       .text()
       .match(/\d{14}/g);
     
-    
-    console.log(date);
-    console.log(keys);
-    
     return { date, keys };
     
   } catch (err) {
